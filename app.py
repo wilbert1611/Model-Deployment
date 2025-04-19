@@ -5,6 +5,7 @@ from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 import joblib
 
 class InferenceHandler:
+    #Function untuk declare variabel yang akan digunakan
     def __init__(self, model_path, encoding_info, training_columns):
         self.model_path = model_path
         self.model = self.load_model()
@@ -12,11 +13,13 @@ class InferenceHandler:
         self.training_columns = training_columns
         self.one_hot_encoders = {}
 
+    #Digunakan untuk load model yang telah di save dalam bentuk pkl
     def load_model(self):
         with open(self.model_path, 'rb') as file:
             model = joblib.load(file)
         return model
 
+    #Digunakan untuk encoding dari data yang sudah diinput
     def preprocess_data(self, new_data):
         label_encoder = LabelEncoder()
         for column in self.encoding_info['label_encode']:
@@ -45,12 +48,15 @@ class InferenceHandler:
         new_data = new_data.reindex(columns=self.training_columns, fill_value=0)
         return new_data
 
+    #Melakukan predict dari data yang telah dilakukan encoding
     def predict(self, new_data):
         processed_data = self.preprocess_data(new_data)
         predictions = self.model.predict(processed_data)
         return predictions
 
+#Function untuk design dari website yang dibuat
 def main():
+    st.title('Wilbert Suwanto - 2702369756')
     st.title('Hotel Booking Prediction')
 
     no_of_adults = st.number_input('Number of Adults', min_value=0, max_value=10)
